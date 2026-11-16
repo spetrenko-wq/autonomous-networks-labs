@@ -1,0 +1,25 @@
+{
+  "uid": "netlab",
+  "title": "Autonomous Netlab Overview",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "5s",
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "Probe Success",
+      "datasource": {"type": "prometheus", "uid": "netlab-prometheus"},
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+      "targets": [{"expr": "probe_success", "refId": "A"}]
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "Probe Duration",
+      "datasource": {"type": "prometheus", "uid": "netlab-prometheus"},
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+      "targets": [{"expr": "probe_duration_seconds", "refId": "A"}]
+    }
+  ]
+}

@@ -1,1 +1,34 @@
-# TODO: fill while following the corresponding practical protocol.
+services:
+  grafana:
+    image: ${GRAFANA_IMAGE}
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_AUTH_ANONYMOUS_ENABLED: 'true'
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+      GF_PATHS_PROVISIONING: /etc/grafana/provisioning
+      GF_PLUGINS_PREINSTALL_DISABLED: 'true'
+      GF_PLUGINS_PREINSTALL: ''
+      GF_NEWS_NEWS_FEED_ENABLED: 'false'
+      GF_ANALYTICS_CHECK_FOR_UPDATES: 'false'
+      GF_ANALYTICS_CHECK_FOR_PLUGIN_UPDATES: 'false'
+    volumes:
+      - ./config/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./config/grafana/dashboards:/etc/grafana/dashboards:ro
+    ports: ['127.0.0.1:${GRAFANA_PORT:-3000}:3000']
+    networks: [monitor, control]
+    mem_limit: 256m
+    cpus: 0.5
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+  ollama:
+    image: ${OLLAMA_IMAGE}
+    environment:
+      OLLAMA_NO_CLOUD: '1'
+    volumes:
+      - ./.ollama-models:/root/.ollama
+    networks: [control]
+    mem_limit: 1536m
+    cpus: 1.5
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]

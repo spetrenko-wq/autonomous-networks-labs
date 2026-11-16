@@ -5,3 +5,4 @@ __pycache__/
 models/
 *.gguf
 .DS_Store
+.ollama-models/
