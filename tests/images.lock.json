@@ -59,7 +59,7 @@
       "tracking": "prefix:v3.13.",
       "platforms": {
         "amd64": {
-          "digest": "sha256:dc30314819e04a1a3d18d0b37eaa9c8e4e18f33f026e3e2d81bf127c7cddcd55",
+          "digest": "sha256:aafa9d694e6a883c02db516d9f6e5b84e14195f49a2a6456a4cca815edda72b9",
           "compressed_bytes": 106844245,
           "last_pushed": "2026-10-21T11:07:12.885958442Z"
         },
@@ -81,7 +81,7 @@
       "tracking": "latest",
       "platforms": {
         "amd64": {
-          "digest": "sha256:66eae352a79e6f677aeddd8c25a9bdb017586dc5fbd230f22329213d891f94bd",
+          "digest": "sha256:ea1c7aa3ef3f307cd03e85f34abb604478ccb90b567fc690da0cd9776da76b13",
           "compressed_bytes": 18978684,
           "last_pushed": "2026-10-21T18:13:16.236086838Z"
         },

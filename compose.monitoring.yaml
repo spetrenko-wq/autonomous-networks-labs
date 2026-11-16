@@ -1,1 +1,18 @@
-# TODO: fill while following the corresponding practical protocol.
+services:
+  blackbox:
+    image: ${BLACKBOX_IMAGE}
+    volumes: [./config/blackbox.yml:/etc/blackbox_exporter/config.yml:ro]
+    networks: [service, monitor]
+    mem_limit: 48m
+    cpus: 0.25
+    cap_drop: [ALL]
+  prometheus:
+    image: ${PROMETHEUS_IMAGE}
+    volumes: [./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro]
+    ports: ['127.0.0.1:${PROMETHEUS_PORT:-9090}:9090']
+    networks: [monitor, control]
+    mem_limit: 192m
+    cpus: 0.5
+    cap_drop: [ALL]
+networks:
+  monitor: {internal: true}
