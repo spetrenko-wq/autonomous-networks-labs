@@ -6,11 +6,38 @@ services:
     image: autonomous-netlab/toolbox:local
     working_dir: /workspace
     volumes: ['./:/workspace']
-    environment: {MODEL: '${MODEL:-qwen3:0.6b}'}
+    command: [sh, -c, 'git --version && sleep infinity']
     networks: [control]
-    mem_limit: 128m
+    mem_limit: 96m
+    cpus: 0.5
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+  backend-a:
+    build:
+      context: .
+      args: {BASE_IMAGE: '${BASE_IMAGE}'}
+    image: autonomous-netlab/toolbox:local
+    working_dir: /workspace
+    volumes: ['./:/workspace']
+    command: [python, site/server.py, site/backend-a]
+    networks: [service]
+    mem_limit: 96m
+    cpus: 0.5
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+  admin:
+    build:
+      context: .
+      args: {BASE_IMAGE: '${BASE_IMAGE}'}
+    image: autonomous-netlab/toolbox:local
+    working_dir: /workspace
+    volumes: ['./:/workspace']
+    command: [python, site/server.py, site/admin]
+    networks: [service]
+    mem_limit: 96m
     cpus: 0.5
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
 networks:
   control: {internal: true}
+  service: {internal: true}

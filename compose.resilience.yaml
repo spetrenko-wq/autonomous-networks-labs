@@ -1,1 +1,58 @@
-# TODO: fill while following the corresponding practical protocol.
+services:
+  backend-b:
+    build:
+      context: .
+      args: {BASE_IMAGE: '${BASE_IMAGE}'}
+    image: autonomous-netlab/toolbox:local
+    working_dir: /workspace
+    volumes: ['./:/workspace']
+    command: [python, site/server.py, site/backend-b]
+    networks: [service]
+    mem_limit: 96m
+    cpus: 0.5
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+  alertmanager:
+    image: ${ALERTMANAGER_IMAGE}
+    volumes: [./config/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro]
+    networks: [monitor, control]
+    mem_limit: 64m
+    cpus: 0.25
+    cap_drop: [ALL]
+  events:
+    build:
+      context: .
+      args: {BASE_IMAGE: '${BASE_IMAGE}'}
+    image: autonomous-netlab/toolbox:local
+    working_dir: /workspace
+    volumes: ['./:/workspace']
+    command:
+      - python
+      - -c
+      - |
+        import json, datetime
+        from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+        EVENTS = []
+        class H(BaseHTTPRequestHandler):
+            def do_GET(self):
+                if self.path.startswith('/events'):
+                    self.send_response(200)
+                    self.send_header('Content-Type', 'application/json')
+                    self.end_headers()
+                    self.wfile.write(json.dumps(EVENTS).encode())
+                else:
+                    self.send_response(404); self.end_headers()
+            def do_POST(self):
+                length = int(self.headers.get('Content-Length', 0))
+                body = self.rfile.read(length).decode('utf-8', 'replace')
+                try: data = json.loads(body)
+                except Exception: data = {'raw': body}
+                EVENTS.append({'at': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'path': self.path, 'payload': data})
+                self.send_response(200); self.end_headers()
+            def log_message(self, *a): pass
+        ThreadingHTTPServer(('0.0.0.0', 8001), H).serve_forever()
+    networks: [monitor, control]
+    mem_limit: 64m
+    cpus: 0.25
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]

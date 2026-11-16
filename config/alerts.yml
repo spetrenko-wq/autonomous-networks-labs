@@ -1,1 +1,10 @@
-# TODO: fill while following the corresponding practical protocol.
+groups:
+  - name: autonomous_netlab
+    rules:
+      - alert: PrimaryBackendUnavailable
+        expr: probe_success{instance="http://backend-a:8000/health"} == 0
+        for: 2s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Primary backend {{ $labels.instance }} is unavailable"

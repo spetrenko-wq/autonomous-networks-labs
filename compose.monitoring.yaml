@@ -8,7 +8,9 @@ services:
     cap_drop: [ALL]
   prometheus:
     image: ${PROMETHEUS_IMAGE}
-    volumes: [./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro]
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./config/alerts.yml:/etc/prometheus/alerts.yml:ro
     ports: ['127.0.0.1:${PROMETHEUS_PORT:-9090}:9090']
     networks: [monitor, control]
     mem_limit: 192m
